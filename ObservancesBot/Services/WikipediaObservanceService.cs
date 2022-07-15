@@ -1,3 +1,4 @@
+using Foxite.Text;
 using HtmlAgilityPack;
 
 namespace ObservancesBot;
@@ -5,11 +6,17 @@ namespace ObservancesBot;
 public class WikipediaObservanceService : ObservanceService {
 	private readonly HttpClient m_Http;
 
+	public override string Name => "Wikipedia";
+
 	public WikipediaObservanceService(HttpClient http) {
 		m_Http = http;
 	}
-	
-	public async override Task<string[]?> GetObservances(DateTime date) {
+
+	public override Uri GetSourceUri(DateTime date) {
+		return new Uri($"https://en.wikipedia.org/wiki/{date:MMMM}_{date:dd}");
+	}
+
+	public async override Task<IReadOnlyCollection<IText>?> GetObservances(DateTime date) {
 		string wikipediaUrl = $"https://en.wikipedia.org/wiki/{date:MMMM}_{date:dd}";
 		string htmlString = await m_Http.GetStringAsync(wikipediaUrl);
 		var htmlDocument = new HtmlDocument();
@@ -27,7 +34,7 @@ public class WikipediaObservanceService : ObservanceService {
 		return section.ChildNodes
 			.Where(child => child.NodeType == HtmlNodeType.Element && child.Name == "li")
 			.Where(li => !li.ChildNodes.Any(child => child.NodeType == HtmlNodeType.Element && child.Name == "ul")) // filter sublists
-			.Select(li => li.GetInnerText(node => !node.HasClass("reference")))
+			.Select(li => li.GetText(new Uri("https://en.wikipedia.org/"), node => !node.HasClass("reference")))
 			.ToArray();
 	}
 }

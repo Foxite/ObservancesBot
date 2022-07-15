@@ -1,24 +1,20 @@
-using System.Text;
+using Foxite.Text;
 using HtmlAgilityPack;
 
 namespace ObservancesBot;
 
 public static class HtmlUtil {
-	public static string GetInnerText(this HtmlNode node, Predicate<HtmlNode> filter) {
-		var sb = new StringBuilder();
-		GetInnerTextInternal(node, filter, sb);
-		return sb.ToString();
-	}
-
-	private static void GetInnerTextInternal(HtmlNode node, Predicate<HtmlNode> filter, StringBuilder sb) {
+	public static IText GetText(this HtmlNode node, Uri baseHref, Func<HtmlNode, bool> filter) {
 		if (node.NodeType == HtmlNodeType.Element) {
-			foreach (HtmlNode childNode in node.ChildNodes) {
-				if (filter(childNode)) {
-					GetInnerTextInternal(childNode, filter, sb);
-				}
-			}
-		} else if (node.NodeType == HtmlNodeType.Text) {
-			sb.Append(node.InnerText);
+			var childTexts = new CompositeText(node.ChildNodes.Where(filter).Select(childNode => GetText(childNode, baseHref, filter)).ToList());
+
+			return node.Name switch {
+				"a" => new LinkText(new Uri(baseHref, node.GetAttributeValue("href", null)), childTexts),
+				"i" => new StyledText(Style.Italic, childTexts),
+				_ => childTexts
+			};
+		} else { // node.NodeType == HtmlNodeType.Text
+			return new LiteralText(node.InnerText);
 		}
 	}
 }
