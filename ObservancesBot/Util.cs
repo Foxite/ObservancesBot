@@ -3,7 +3,7 @@ using HtmlAgilityPack;
 
 namespace ObservancesBot;
 
-public static class HtmlUtil {
+public static class Util {
 	public static IText GetText(this HtmlNode node, Uri? baseHref = null, Func<HtmlNode, bool>? filter = null) {
 		if (node.NodeType == HtmlNodeType.Element) {
 			var childTexts = new CompositeText(node.ChildNodes.Where(filter ?? (_ => true)).Select(childNode => GetText(childNode, baseHref, filter)).ToList());
@@ -16,5 +16,9 @@ public static class HtmlUtil {
 		} else { // node.NodeType == HtmlNodeType.Text
 			return new LiteralText(HtmlEntity.DeEntitize(node.InnerText));
 		}
+	}
+	
+	public static string GetEnv(string name, string? defaultValue = null) {
+		return Environment.GetEnvironmentVariable(name) ?? defaultValue ?? throw new Exception("Missing environment variable: " + name);
 	}
 }
