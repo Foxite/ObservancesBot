@@ -17,13 +17,12 @@ public class WikipediaObservanceService : ObservanceService {
 	}
 
 	public async override Task<IReadOnlyCollection<IText>?> GetObservances(DateTime date) {
-		string wikipediaUrl = $"https://en.wikipedia.org/wiki/{date:MMMM}_{date:dd}";
-		string htmlString = await m_Http.GetStringAsync(wikipediaUrl);
+		string htmlString = await m_Http.GetStringAsync(GetSourceUri(date));
 		var htmlDocument = new HtmlDocument();
 		htmlDocument.LoadHtml(htmlString);
 		HtmlNode? header = htmlDocument.GetElementbyId("Holidays_and_observances");
 		HtmlNode? section = header.ParentNode.NextSibling;
-		while (!(section.NodeType == HtmlNodeType.Element && section.Name == "ul")) {
+		while (section != null && !(section.NodeType == HtmlNodeType.Element && section.Name == "ul")) {
 			section = section.NextSibling;
 		}
 
