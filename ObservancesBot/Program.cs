@@ -4,14 +4,26 @@ using DSharpPlus.Entities;
 using Foxite.Text;
 using ObservancesBot;
 
-var observanceService = new WikipediaObservanceService(new HttpClient() {
+string GetEnv(string name, string? defaultValue = null) {
+	return Environment.GetEnvironmentVariable(name) ?? defaultValue ?? throw new ArgumentNullException(nameof(name), "Missing environment variable: " + name);
+}
+
+string webhookUrl = GetEnv("WEBHOOK_URL");
+string source = GetEnv("SOURCE", "wikipedia");
+
+var http = new HttpClient() {
 	DefaultRequestHeaders = {
 		UserAgent = {
-			new ProductInfoHeaderValue("ObservancesBot", "0.1"),
-			new ProductInfoHeaderValue("(https://github.com/Foxite/ObservancesBot)"),
+			new ProductInfoHeaderValue("ObservancesBot", "0.2"),
+			new ProductInfoHeaderValue("(https://github.com/Foxite/ObservancesBot)")
 		}
 	}
-});
+};
+
+ObservanceService observanceService = source switch {
+	"wikipedia" => new WikipediaObservanceService(http),
+	"daysoftheyear.com" => new DaysOfTheYearDotComObservanceService(http)
+};
 
 DateTime date = DateTime.Today;
 
@@ -24,7 +36,7 @@ if (observances == null) {
 	var discordFormatter = new DiscordTextFormatter();
 
 	var webhookClient = new DiscordWebhookClient();
-	DiscordWebhook webhook = await webhookClient.AddWebhookAsync(new Uri(Environment.GetEnvironmentVariable("WEBHOOK_URL")));
+	DiscordWebhook webhook = await webhookClient.AddWebhookAsync(new Uri(webhookUrl));
 
 	var webhookBuilder = new DiscordWebhookBuilder();
 
