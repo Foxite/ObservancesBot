@@ -2,7 +2,8 @@
 using Foxite.Text;
 using ObservancesBot;
 
-string source = Util.GetEnv("SOURCE", "wikipedia");
+string sourceName = Util.GetEnv("SOURCE", "wikipedia");
+string targetName = Util.GetEnv("TARGET");
 
 var http = new HttpClient() {
 	DefaultRequestHeaders = {
@@ -13,10 +14,15 @@ var http = new HttpClient() {
 	}
 };
 
-Target target = new SaveToCsvTarget("/home/foxite/observances.csv");
-ObservanceService observanceService = source switch {
+Target target = targetName switch {
+	"discord" => new DiscordWebhookTarget(),
+	"csv" => new SaveToCsvTarget(Util.GetEnv("CSV_PATH")),
+};
+
+ObservanceService observanceService = sourceName switch {
 	"wikipedia" => new WikipediaObservanceService(http),
-	"daysoftheyear.com" => new DaysOfTheYearDotComObservanceService(http)
+	"daysoftheyear.com" => new DaysOfTheYearDotComObservanceService(http),
+	"csv" => new CsvObservanceService(Util.GetEnv("CSV_PATH"), Util.GetEnv("SOURCE_NAME"), Util.GetEnv("SOURCE_URI_FORMAT")),
 };
 
 async Task SendAllObservances() {

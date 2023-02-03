@@ -28,14 +28,6 @@ public class SaveToCsvTarget : Target, IDisposable {
 	public void Dispose() {
 		m_CsvWriter.Dispose();
 	}
-	
-	private class CsvRow {
-		public DateTime Date { get; }
-		public string Text { get; }
-	
-		public CsvRow(DateTime date, string text) {
-			Date = date;
-			Text = text;
-		}
-	}
 }
+
+public record CsvRow(DateTime? Date, string Text);
