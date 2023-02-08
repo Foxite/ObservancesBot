@@ -1,0 +1,14 @@
+version: "3.3"
+
+services:
+  bot:
+    build:
+      context: .
+      dockerfile: ObservancesBot/Dockerfile
+#    command: dotnet /app/ObservancesBot.dll
+    # cron doesn't seem to respond to docker's signals.
+    stop_grace_period: 3s
+    environment:
+      SCHEDULE: "* * * * *"
+      TARGET: discord
+      WEBHOOK_URL: https://discord.com/api/webhooks/1070890044199546890/CSLKCmTsgoTuOxWlXAFXL1HQ3tnrd-htHP1OZs3Sdg9raUaN5zVguIeqFavnB2CyKd8X

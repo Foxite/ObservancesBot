@@ -1,0 +1,9 @@
+#!/bin/bash
+
+if [ -z "$SCHEDULE" ]
+then
+	SCHEDULE="0 6 * * *"
+fi
+
+echo "$SCHEDULE $(whoami) /usr/local/bin/run_on_schedule" > /etc/cron.d/run_job
+cron -f -L 15

@@ -1,4 +1,5 @@
 .idea
 **/bin
+!ObservancesBot/docker/bin
 **/obj
 

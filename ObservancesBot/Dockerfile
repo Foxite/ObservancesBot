@@ -13,6 +13,9 @@ FROM build AS publish
 RUN dotnet publish "ObservancesBot.csproj" -c Release -o /app/publish
 
 FROM base AS final
+RUN apt update && apt -y install cron
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "ObservancesBot.dll"]
+COPY ["ObservancesBot/docker/bin/", "/usr/local/bin/"]
+RUN bash -c 'chmod +x /usr/local/bin/{run_on_schedule,schedule}'
+CMD /usr/local/bin/schedule
