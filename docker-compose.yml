@@ -1,0 +1,12 @@
+version: "3.3"
+
+services:
+  bot:
+    build:
+      context: .
+      dockerfile: ObservancesBot/Dockerfile
+    environment:
+#      SCHEDULE: "* * * * *"
+      SCHEDULE: "21 11 * * *"
+      TARGET: discord
+      WEBHOOK_URL: https://discord.com/api/webhooks/1070890044199546890/CSLKCmTsgoTuOxWlXAFXL1HQ3tnrd-htHP1OZs3Sdg9raUaN5zVguIeqFavnB2CyKd8X
