@@ -11,4 +11,4 @@ services:
     environment:
       SCHEDULE: "* * * * *"
       TARGET: discord
-      WEBHOOK_URL: https://discord.com/api/webhooks/1070890044199546890/CSLKCmTsgoTuOxWlXAFXL1HQ3tnrd-htHP1OZs3Sdg9raUaN5zVguIeqFavnB2CyKd8X
+      WEBHOOK_URL: https://discord.com/api/webhooks/123/token
