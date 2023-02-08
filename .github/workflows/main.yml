@@ -21,3 +21,4 @@ jobs:
         password: ${{ secrets.PUSH_PASSWD }}
         default_branch: master
         no_push: ${{ github.event_name == 'pull_request' }}
+        tags: "2"
