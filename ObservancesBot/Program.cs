@@ -25,6 +25,8 @@ ObservanceService observanceService = sourceName switch {
 	"csv" => new CsvObservanceService(Util.GetEnv("CSV_PATH"), Util.GetEnv("SOURCE_NAME"), Util.GetEnv("SOURCE_URI_FORMAT")),
 };
 
+bool onlyToday = string.IsNullOrEmpty(Util.GetEnv("ENUMERATE_ALL", ""));
+
 async Task SendAllObservances() {
 	for (var date = new DateTime(2020, 01, 01); date.Year == 2020; date = date.AddDays(1)) {
 		Console.WriteLine(date.ToString("yyyy-MM-dd"));
@@ -48,7 +50,11 @@ async Task SendTodaysObservances() {
 	}
 }
 
-await SendTodaysObservances();
+if (onlyToday) {
+	await SendTodaysObservances();
+} else {
+	await SendAllObservances();
+}
 
 // ReSharper disable once SuspiciousTypeConversion.Global
 if (observanceService is IDisposable disposableService) {

@@ -2,4 +2,4 @@
 
 . <(xargs -0 bash -c 'printf "export %q\n" "$@"' -- < /proc/$(pidof cron)/environ)
 
-dotnet /app/ObservancesBot
+dotnet /app/ObservancesBot.dll
