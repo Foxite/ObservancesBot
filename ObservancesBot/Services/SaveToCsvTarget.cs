@@ -18,7 +18,7 @@ public class SaveToCsvTarget : Target, IDisposable {
 	}
 
 	public async override Task Send(Observances observances) {
-		var formatter = new DiscordTextFormatter();
+		var formatter = ModularTextFormatter.Markdown();
 		foreach (IText item in observances.Items) {
 			await m_CsvWriter.NextRecordAsync();
 			m_CsvWriter.WriteRecord(new CsvRow(observances.Date, formatter.Format(item)));

@@ -5,13 +5,13 @@ using Foxite.Text;
 namespace ObservancesBot;
 
 public class DiscordWebhookTarget : Target {
-	private readonly DiscordTextFormatter m_Formatter;
+	private readonly ITextFormatter m_Formatter;
 	private readonly List<DiscordWebhookClient> m_WebhookClients;
 
 	public DiscordWebhookTarget() {
 		string webhookUrl = Util.GetEnv("WEBHOOK_URL");
 		
-		m_Formatter = new DiscordTextFormatter();
+		m_Formatter = ModularTextFormatter.Markdown();
 
 		m_WebhookClients = webhookUrl.Split(';').Select(url => new DiscordWebhookClient(url)).ToList();
 	}
