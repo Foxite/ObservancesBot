@@ -20,6 +20,7 @@ In other situations, you probably shouldn't use `ENUMERATE_ALL`.
 
 If target is discord:
 - `WEBHOOK_URL`
+- `DISCORD_USE_FIELDS`: if true or unspecified, display observances as embed fields, otherwise use a markdown list.
 
 If target is csv:
 - `CSV_PATH`
@@ -27,7 +28,7 @@ If target is csv:
 If source is csv:
 - `CSV_PATH`
 - `SOURCE_NAME`: the name used to attribute the source (if used by the target, currently only discord)
-- `SOURCE_URI_FORMAT`: the format string used to generate the source url (if used by the target, currently only discord)
+- `SOURCE_URI_FORMAT`: the format string used to generate the source url (if used by the target, currently only discord) with the only parameter being the DateTime for the observances being processed.
 
 See these documents for explanations on format strings in .NET:
 - https://learn.microsoft.com/en-us/dotnet/api/system.string.format?view=net-6.0#remarks-top
