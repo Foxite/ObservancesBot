@@ -26,6 +26,7 @@ public class DiscordWebhookTarget : Target {
 					Name = "And more",
 					Value = m_Formatter.Format(new LinkText(observances.SourceUri, new LiteralText("Check the source!")))
 				});
+				break;
 			} else {
 				fields.Add(new EmbedFieldBuilder() {
 					Name = i.ToString(),
