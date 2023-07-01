@@ -15,7 +15,7 @@ var http = new HttpClient() {
 };
 
 Target target = targetName switch {
-	"discord" => new DiscordWebhookTarget(),
+	"discord" => new DiscordWebhookTarget(Util.GetEnv("WEBHOOK_URL"), Util.GetEnv("DISCORD_USE_FIELDS", "true") == "true"),
 	"csv" => new SaveToCsvTarget(Util.GetEnv("CSV_PATH")),
 };
 

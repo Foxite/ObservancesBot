@@ -9,13 +9,10 @@ public class DiscordWebhookTarget : Target {
 	private readonly List<DiscordWebhookClient> m_WebhookClients;
 	private readonly bool m_UseFields;
 
-	public DiscordWebhookTarget() {
-		string webhookUrl = Util.GetEnv("WEBHOOK_URL");
-		m_UseFields = Util.GetEnv("DISCORD_USE_FIELDS") == "true";
-		
+	public DiscordWebhookTarget(string webhookUrl, bool useFields) {
 		m_Formatter = ModularTextFormatter.Markdown();
-
 		m_WebhookClients = webhookUrl.Split(';').Select(url => new DiscordWebhookClient(url)).ToList();
+		m_UseFields = useFields;
 	}
 
 	public async override Task Send(Observances observances) {
