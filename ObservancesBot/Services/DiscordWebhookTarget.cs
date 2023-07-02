@@ -40,7 +40,7 @@ public class DiscordWebhookTarget : Target {
 				i++;
 			}
 		} else {
-			string RenderDescription(IReadOnlyList<IText> items) {
+			string RenderDescription(IList<IText> items) {
 				return m_Formatter.Format(new CompositeText(new LiteralText("Good morning! Around the world, these celebrations will happen today:\n"), new ListText(true, items)));
 			}
 
