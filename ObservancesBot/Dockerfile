@@ -13,9 +13,11 @@ FROM build AS publish
 RUN dotnet publish "ObservancesBot.csproj" -c Release -o /app/publish
 
 FROM base AS final
-RUN apt update && apt -y install cron
+RUN apt update && apt -y install cron dumb-init
 WORKDIR /app
 COPY --from=publish /app/publish .
 COPY ["ObservancesBot/docker/bin/", "/usr/local/bin/"]
 RUN bash -c 'chmod +x /usr/local/bin/{run_on_schedule,schedule}'
+
+ENTRYPOINT ["/usr/bin/dumb-init", "--"]
 CMD /usr/local/bin/schedule
