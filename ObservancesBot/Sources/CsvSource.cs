@@ -5,14 +5,14 @@ using Foxite.Text.Parsers;
 
 namespace ObservancesBot; 
 
-public class CsvObservanceService : ObservanceService {
+public class CsvSource : Source {
 	private readonly string m_Path;
 	private readonly string m_SourceUriFormat;
 	private readonly MarkdownParser m_MarkdownParser;
 
 	public override string Name { get; }
 
-	public CsvObservanceService(string path, string name, string sourceUriFormat) {
+	public CsvSource(string path, string name, string sourceUriFormat) {
 		m_Path = path;
 		m_SourceUriFormat = sourceUriFormat;
 		m_MarkdownParser = new MarkdownParser();

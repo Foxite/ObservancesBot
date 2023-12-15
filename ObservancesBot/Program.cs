@@ -19,10 +19,10 @@ Target target = targetName switch {
 	"csv" => new SaveToCsvTarget(Util.GetEnv("CSV_PATH")),
 };
 
-ObservanceService observanceService = sourceName switch {
-	"wikipedia" => new WikipediaObservanceService(http),
-	"daysoftheyear.com" => new DaysOfTheYearDotComObservanceService(http),
-	"csv" => new CsvObservanceService(Util.GetEnv("CSV_PATH"), Util.GetEnv("SOURCE_NAME"), Util.GetEnv("SOURCE_URI_FORMAT")),
+Source source = sourceName switch {
+	"wikipedia" => new WikipediaSource(http),
+	"daysoftheyear.com" => new DaysOfTheYearDotComSource(http),
+	"csv" => new CsvSource(Util.GetEnv("CSV_PATH"), Util.GetEnv("SOURCE_NAME"), Util.GetEnv("SOURCE_URI_FORMAT")),
 };
 
 bool onlyToday = string.IsNullOrEmpty(Util.GetEnv("ENUMERATE_ALL", ""));
@@ -30,23 +30,23 @@ bool onlyToday = string.IsNullOrEmpty(Util.GetEnv("ENUMERATE_ALL", ""));
 async Task SendAllObservances() {
 	for (var date = new DateTime(2020, 01, 01); date.Year == 2020; date = date.AddDays(1)) {
 		Console.WriteLine(date.ToString("yyyy-MM-dd"));
-		IReadOnlyCollection<IText>? observances = await observanceService.GetObservances(date);
+		IReadOnlyCollection<IText>? observances = await source.GetObservances(date);
 
 		if (observances == null) {
 			Console.WriteLine("null");
 		} else {
-			await target.Send(new Observances(observances, date, observanceService.GetSourceUri(date), observanceService.Name));
+			await target.Send(new Observances(observances, date, source.GetSourceUri(date), source.Name));
 		}
 	}
 }
 
 async Task SendTodaysObservances() {
 	DateTime date = DateTime.Today;
-	IReadOnlyCollection<IText>? observances = await observanceService.GetObservances(date);
+	IReadOnlyCollection<IText>? observances = await source.GetObservances(date);
 	if (observances == null) {
 		Console.WriteLine("null");
 	} else {
-		await target.Send(new Observances(observances, date, observanceService.GetSourceUri(date), observanceService.Name));
+		await target.Send(new Observances(observances, date, source.GetSourceUri(date), source.Name));
 	}
 }
 
@@ -57,8 +57,8 @@ if (onlyToday) {
 }
 
 // ReSharper disable once SuspiciousTypeConversion.Global
-if (observanceService is IDisposable disposableService) {
-	disposableService.Dispose();
+if (source is IDisposable disposableSource) {
+	disposableSource.Dispose();
 }
 
 if (target is IDisposable disposableTarget) {
