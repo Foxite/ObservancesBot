@@ -3,10 +3,10 @@ using HtmlAgilityPack;
 
 namespace ObservancesBot; 
 
-public class DaysOfTheYearDotComObservanceService : ObservanceService {
+public class DaysOfTheYearDotComSource : Source {
 	private readonly HttpClient m_Http;
 
-	public DaysOfTheYearDotComObservanceService(HttpClient http) {
+	public DaysOfTheYearDotComSource(HttpClient http) {
 		m_Http = http;
 	}
 

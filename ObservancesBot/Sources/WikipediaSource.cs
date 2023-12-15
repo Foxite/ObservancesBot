@@ -3,12 +3,12 @@ using HtmlAgilityPack;
 
 namespace ObservancesBot;
 
-public class WikipediaObservanceService : ObservanceService {
+public class WikipediaSource : Source {
 	private readonly HttpClient m_Http;
 
 	public override string Name => "Wikipedia";
 
-	public WikipediaObservanceService(HttpClient http) {
+	public WikipediaSource(HttpClient http) {
 		m_Http = http;
 	}
 
